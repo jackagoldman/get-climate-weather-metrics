@@ -4,21 +4,29 @@ cleanDataDefol <- function(defol, nondefol, defol.info){
   
   data <- rbind(defol, nondefol)
   
-  data <- data |> 
+  defol.info <- defol.info |> 
     rename(Fire_ID = fire_name)
   
  data1 <- defol.info |> 
     left_join(data, by = c("Fire_ID", "defoliated"))
  
- data1 <- tibble::as_tibble(data1)
+
  
  return(data1)
   
 }
 
 
+data2sf <- function(data){
+  
+  dataSf <- sf::st_as_sf(data)
+  dataSf <- sf::st_make_valid(dataSf)
+  return(dataSf)
+}
+
 
 getCentroid <- function(data){
+
   
   data <- st_make_valid(data)
   
@@ -60,4 +68,20 @@ timeFrame <- function(data){
   return(res)
 }
 
+
+# output data from wx
+
+output_wx <- function(data, RES_DIR, filename, extension){
+  require(sf)
+  require(readr)
+  if(extension == ".shp"){
+  
+  path <- paste0(RES_DIR + "_" + filename + extension)
+  st_write(data, path)
+  }else if(extension == ".csv"){
+    path <- paste0(RES_DIR + "_" + filename + extension)
+    readr::write_csv(data, path)
+  }
+  
+}
 
