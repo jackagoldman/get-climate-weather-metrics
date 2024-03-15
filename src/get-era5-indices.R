@@ -61,7 +61,7 @@ weatherIndices <- function(data, bandList){
  #join to data1 
  data1.drop <- data1 |> st_drop_geometry()
  data.return <- cbind(data1.drop,  era5.metrics)
- data.return <- data.return |> st_drop_geometry()
+ data.return <- data.return |> st_drop_geometry() |> as.list()
  # return data frame
  return(data.return)
  

@@ -10,6 +10,8 @@ cleanDataDefol <- function(defol, nondefol, defol.info){
  data1 <- defol.info |> 
     left_join(data, by = c("Fire_ID", "defoliated"))
  
+ data1 <- tibble::as_tibble(data1)
+ 
  return(data1)
   
 }
