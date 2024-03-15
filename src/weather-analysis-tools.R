@@ -1,5 +1,20 @@
 # rgee weather analysis tools
 
+cleanDataDefol <- function(defol, nondefol, defol.info){
+  
+  data <- rbind(defol, nondefol)
+  
+  data <- data |> 
+    rename(Fire_ID = fire_name)
+  
+ data1 <- defol.info |> 
+    left_join(data, by = c("Fire_ID", "defoliated"))
+ 
+ return(data1)
+  
+}
+
+
 
 getCentroid <- function(data){
   
