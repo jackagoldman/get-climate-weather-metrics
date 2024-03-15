@@ -18,6 +18,8 @@ weatherIndices <- function(data, bandList){
   require(weathermetrics)
   require(sf)
   
+  data <- data2sf(data)
+  
   #get centroid
   data1 <- getCentroid(data)
   fireCent <- data1$centroid
