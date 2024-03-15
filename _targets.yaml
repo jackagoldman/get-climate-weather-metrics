@@ -1,0 +1,7 @@
+project_pre:
+  script: _preprocessing.R
+  store: store_preprocessing
+project_get-wc:
+  script: _get-weather-climate.R
+  store: store_get-wc
+  inherits: project_pre
