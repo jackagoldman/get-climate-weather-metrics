@@ -15,7 +15,13 @@ matchedPairsDefol <- ""
 matchedPairsNonDefol <- 
 defolInfo <- 
 RES_DIR <- ""
+path2ConfigFile <-    #example "~/Code/python-rgee-config.py"
 
+# point to config file
+reticulate::py_run_file('~/Code/python-rgee-config.py')
+# Initalize gee
+ee_Initialize()
+  
 
 # set bandlist (metrics to extract from era5)
 bandList <- list('temperature_2m', 'total_precipitation_sum')
