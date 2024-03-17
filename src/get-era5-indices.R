@@ -17,6 +17,7 @@ weatherIndices <- function(data, bandList){
   
   require(weathermetrics)
   require(sf)
+  require(tidyverse)
   
   data <- data2sf(data)
   

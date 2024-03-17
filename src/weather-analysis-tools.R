@@ -54,19 +54,36 @@ getBuffer <- function(data){
 
 # need to do for both defoliated/non-defoliated for control, use time frame for defol for non-defol
 timeFrame <- function(data){
-   if(c("1") %in% data$defoliated){
-    data1 <- data |> filter(defoliated == "1")
-    year <- data1 |> select(c(Fire_Year)) |> st_drop_geometry() |> as.numeric()
-    tsd <- data1 |> select(c(tsd)) |>  st_drop_geometry() |> as.numeric()
-    time.gap <- (year - tsd) 
-    time.gap <- lubridate::ymd(time.gap, truncated = 2L) |> as.character() |> as.data.frame()
-    year <- lubridate::ymd(year, truncated = 2L) |> as.character() |> as.data.frame()
-    res <- cbind(time.gap, year)
-    colnames(res) <- c("time.gap", "year")
-  }
-  
-  return(res)
+  year <- data |> select(c(Fire_Year)) |> st_drop_geometry() 
+  year <- mutate(year, Fire_Year = as.numeric(Fire_Year))
+  tsd <- data |> select(c(tsd)) |>  st_drop_geometry() 
+  tsd <- mutate(tsd, tsd = as.numeric(tsd))
+  time.gap <- (year - tsd) 
+  time.gap <- lubridate::ymd(time.gap, truncated = 2L) |> as.character() |> as.data.frame()
+  year <- lubridate::ymd(year, truncated = 2L) |> as.character() |> as.data.frame()
+  res <- cbind(time.gap, year)
+  colnames(res) <- c("time.gap", "year")
+
+
+return(res)
 }
+
+
+# function to give nondefol fires same timeframe as defol fires (tsd)
+matchTsd <- function(data){
+    defol <- filter(data, defoliated == "1")
+    defol.tsd <- select(defol, c("Fire_ID", "tsd"))
+    nondefol <- filter(data, defoliated == "0")
+    nondefol <- select(nondefol, -c("tsd"))
+    
+    nondefol <- left_join(nondefol, defol.tsd, by = "Fire_ID")
+    
+    data.res <- rbind(defol, nondefol)
+    
+    
+  
+}
+
 
 
 # output data from wx
