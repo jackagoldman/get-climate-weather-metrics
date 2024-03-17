@@ -32,14 +32,25 @@ processed_data <- tar_read(preppedData, store = "store_preprocessing")
 #set values to map over
 values_df <- tibble::tibble(processed_data) |> dplyr::select(c(id, prov))
 
-# Replace the target list below with your own:
 
-list(tarchetypes::tar_map(
+
+clean <- tar_target(df.matchedTsd, matchTsd(processed_data))
+
+mapped <- tarchetypes::tar_map(
     values = values_df,
-    targets::tar_target(wx, weatherIndices(processed_data, bandList))),
-    targets::tar_target(results, command = dplyr::bind_rows(wx)),
-    targets::tar_target(write.results, output_wx(results, RES_DIR, filename, extension))
+    targets::tar_target(wx, weatherIndices(clean[["df.matchedTsd"]], bandList)), unlist = FALSE
+    )
+  
+combined <- tar_combine(
+    results,
+    mapped[["wx"]],
+    command = dplyr::bind_rows(!!!.x))
+    
+    
+return <- targets::tar_target(write.results, output_wx(combined[["results"]], RES_DIR, filename, extension))
 
-)
+list(clean, mapped, combined, return)
+
+
 
 
