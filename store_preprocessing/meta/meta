@@ -1,11 +1,17 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
-matchedPairsNonDefol|object|ccacf3931120f89e
-defolInfo|object|ccacf3931120f89e
-getCentroid|function|a49d78da6e2af13b
-matchedPairsDefol|object|d4df58214ce413ab
-getBuffer|function|fca0449069ec324a
-cleanDataDefol|function|3f23baf7039ba4ab
-timeFrame|function|7aa6adae0e97075c
-weatherIndices|function|433225be4ed07453
-matchedDefolFile|stem|472a95ed61bfe77c|b9c636b09aaacfea|2601b5b1a28a4761|-1596064288|/Users/jgoldman/Library/CloudStorage/OneDrive-UniversityofToronto/Data/qc-data/matching-pairs-design/clean-tables/|t19793.0455313752s|52a4111a8b15ab7d|10186107|file|local|vector|||1.224|package ggplot2 was built under R version 4.3.1. package dplyr was built under R version 4.3.1. package stringr was built under R version 4.3.1. package lubridate was built under R version 4.3.1. package reticulate was built under R version 4.3.1. package rgee was built under R version 4.3.1|
-defolInfoFile|stem||3fc73cbec5ce985e|500add52ac539a84|577547711||t19797.625861175s||0|file|local|vector|||||_build_ target defolInfoFile did not return a character. dynamic files targets with format  file must return character vectors of file or directory paths.
+cleanDataDefol|function|d95f74c4bf34a74d|||||||||||||||
+defolInfo|object|91b097aa2ef368cd|||||||||||||||
+defolInfoFile|stem|9b72a83849cd3379|3fc73cbec5ce985e|900d6f63e0d2b096|577547711|~/Work/PhD/sbw-fire-interactions/nbr-recovery/data/paired_fires/on-qc-defol-table.csv|t19793.8262529179s|273bb875f40c4c3a|3769|file|local|vector|||0||
+defolInfoTable|stem|3a990b4d80b53170|7e6ee44264837173|d955082cacc8de4d|1292096428||t19797.7290546564s|cd7662a5b5ca6b8f|1456|rds|local|vector|||0.139||
+defolShp|stem|32992dbbfdf9b287|dd1344d02d3cd578|703921b0685b36a8|-1467911772||t19797.7290529833s|ff88f0b459fee603|3059467|rds|local|vector|||0.071||
+getBuffer|function|fca0449069ec324a|||||||||||||||
+getCentroid|function|a49d78da6e2af13b|||||||||||||||
+matchedDefolFile|stem|b13fc37645861821|b9c636b09aaacfea|d9459bc16caa86f9|-1596064288|~/Desktop/OneDrive - University of Toronto/Data/chapter_3/on-qc-defol.shp|t19797.7183695063s|0db02ebb902cae9c|4038864|file|local|vector|||1.2|package ggplot2 was built under R version 4.3.1. package dplyr was built under R version 4.3.1. package stringr was built under R version 4.3.1. package lubridate was built under R version 4.3.1. package reticulate was built under R version 4.3.1. package rgee was built under R version 4.3.1|
+matchedNonDefolFile|stem|b4ae74098dbb8bb1|de241bd79ab0f396|cf4de7588ec6b06c|-1215933650|~/Desktop/OneDrive - University of Toronto/Data/chapter_3/on-qc-nondefol.shp|t19797.7185261612s|298feda9c059b46f|2036768|file|local|vector|||0||
+matchedPairsDefol|object|384fafec3327ede9|||||||||||||||
+matchedPairsNonDefol|object|df7b231aa9b1f147|||||||||||||||
+NondefolShp|stem|864cdf8fa2fa7f28|f2f06328e1392cde|a76a6cad653086e5|-1938623681||t19797.7290570995s|868ee0853033a986|1556069|rds|local|vector|||0.013||
+output_wx|function|9b559c8b42952c70|||||||||||||||
+preppedData|stem|f4128bf7054e3f00|833ef67f3e517180|dd7e4503876e04c5|-212216012||t19797.7564844602s|3a8994216e20f3d5|4609070|rds|local|vector|||0.025||
+timeFrame|function|7aa6adae0e97075c|||||||||||||||
+weatherIndices|function|433225be4ed07453|||||||||||||||

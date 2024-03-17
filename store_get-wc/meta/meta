@@ -1,0 +1,17 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
+.Random.seed|object|7df89ac149fff280|||||||||||||||
+bandList|object|4ca5f275b858f9b8|||||||||||||||
+cleanDataDefol|function|d95f74c4bf34a74d|||||||||||||||
+data2sf|function|768e129c75d310eb|||||||||||||||
+extension|object|7d2416d9be610f39|||||||||||||||
+filename|object|3397bfdb7bd213f5|||||||||||||||
+getBuffer|function|fca0449069ec324a|||||||||||||||
+getCentroid|function|a49d78da6e2af13b|||||||||||||||
+output_wx|function|9b559c8b42952c70|||||||||||||||
+path2ConfigFile|object|3ef8f33369c99fcc|||||||||||||||
+processed_data|object|1e64ada7a0a12904|||||||||||||||
+RES_DIR|object|6a16ec02c5d7f2e2|||||||||||||||
+timeFrame|function|7aa6adae0e97075c|||||||||||||||
+values_df|object|a5a8074631fb1741|||||||||||||||
+weatherIndices|function|fb29912bd9b72003|||||||||||||||
+wx_5_ON|stem||674de11b22fdc69a|1b7b0ee54e69b1a5|-496412298||t19797.7540746034s||0|rds|local|vector|||3.187|package ggplot2 was built under R version 4.3.1. package dplyr was built under R version 4.3.1. package stringr was built under R version 4.3.1. package lubridate was built under R version 4.3.1. package reticulate was built under R version 4.3.1. package rgee was built under R version 4.3.1|list object cannot be coerced to type double

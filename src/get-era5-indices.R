@@ -17,6 +17,9 @@ weatherIndices <- function(data, bandList){
   
   require(weathermetrics)
   require(sf)
+  require(tidyverse)
+  
+  data <- data2sf(data)
   
   #get centroid
   data1 <- getCentroid(data)
