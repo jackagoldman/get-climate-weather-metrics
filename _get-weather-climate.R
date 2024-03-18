@@ -25,6 +25,10 @@ rgee::ee_Initialize()
 # set bandlist (metrics to extract from era5)
 bandList <- list('temperature_2m', 'total_precipitation_sum')
 
+# set filter image dates
+startDay <- 120  #ex. 120 (April 30)
+endDay <- 243   #ex. 243 (Aug 31)
+
 
 #get preprocessed data
 processed_data <- tar_read(preppedData, store = "store_preprocessing")
@@ -33,12 +37,13 @@ processed_data <- tar_read(preppedData, store = "store_preprocessing")
 values_df <- tibble::tibble(processed_data) |> dplyr::select(c(id, prov))
 
 
+# pipeline
 
 clean <- tar_target(df.matchedTsd, matchTsd(processed_data))
 
 mapped <- tarchetypes::tar_map(
     values = values_df,
-    targets::tar_target(wx, weatherIndices(clean[["df.matchedTsd"]], bandList)), unlist = FALSE
+    targets::tar_target(wx, weatherIndices(clean[["df.matchedTsd"]], bandList, startDay, endDay)), unlist = FALSE
     )
   
 combined <- tar_combine(
