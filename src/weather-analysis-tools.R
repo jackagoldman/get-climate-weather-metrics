@@ -108,11 +108,11 @@ output_wx <- function(data, RES_DIR, filename, extension){
   require(readr)
   if(extension == ".shp"){
   
-  path <- paste0(RES_DIR + "_" + filename + extension)
+  path <- paste0(RES_DIR, filename, extension)
   st_write(data, path)
   }else if(extension == ".csv"){
     data <- data |>  st_as_sf()  |>  sfc_as_cols() |> st_drop_geometry()
-    path <- paste0(RES_DIR + "_" + filename + extension)
+    path <- paste0(RES_DIR, filename , extension)
     readr::write_csv(data, path)
   }
   
