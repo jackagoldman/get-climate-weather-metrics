@@ -164,7 +164,7 @@ weatherIndices <- function(data, bandList, startDay, endDay){
  #join to data1 
  data1.drop <- data1 |> st_drop_geometry() 
  data.return <- cbind(data1.drop,  era5.metrics, era5.post.metrics)
- data.return <- data.return |> st_drop_geometry() |> select(-c(geometry, tsd, cumltve_yrs, Fire_Year, prov)) 
+ data.return <- data.return |> st_drop_geometry() |> select(-c(geometry, tsd, cumltve_yrs, Fire_Year, prov))
  # return data frame
  return(data.return)
  
@@ -173,3 +173,61 @@ weatherIndices <- function(data, bandList, startDay, endDay){
 
 
 
+# loop for function
+
+getWxClim <- function(values_df, data){
+  
+  #create empty list
+  qlist <- list()
+  
+  for(i in 1:nrow(values_df)){
+  
+  qlist[[i]] <-  weatherIndices(data[i,], bandList, startDay, endDay)
+  i + 1
+  
+}
+  res <- do.call(rbind, qlist)
+  
+  return(res)
+}
+
+
+
+
+
+# 
+fwiIndices <- function(data, startDay, enDay){
+  
+  require(weathermetrics)
+  require(sf)
+  require(tidyverse)
+  
+  data <- data2sf(data)
+  
+  #get centroid
+  data1 <- getCentroid(data)
+  fireCent <- data1$centroid
+  fireID <- data1$id
+  
+  
+  #return fire centroids as ee object
+  fireCentee <- sf_as_ee(fireCent)
+  
+  
+  #get timeframe 
+  #NOTE : timeframe must be from year of defol to year of fire OR date of fire, right now its year of fire
+  #should this be summer temperature only? or growing season?
+  filterTime <- timeFrame(data1)
+  imageStart <- filterTime$time.gap
+  fireYear <- filterTime$year
+  
+  
+  ###### PRE-FIRE
+  #filter imagery by data and filter to point
+  era5 <- ee$ImageCollection("ECMWF/ERA5_LAND/DAILY_AGGR")$filterDate(imageStart, fireYear)$filterBounds(fireCentee)
+  
+  
+  
+  
+  
+}
