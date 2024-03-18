@@ -11,9 +11,9 @@ tar_source("src/get-era5-indices.R")
 tar_source("src/weather-analysis-tools.R")
 
 #paths
-matchedPairsDefol <- "~/Desktop/OneDrive - University of Toronto/Data/chapter_3/on-qc-defol.shp"
-matchedPairsNonDefol <- "~/Desktop/OneDrive - University of Toronto/Data/chapter_3/on-qc-nondefol.shp"
-defolInfo <- "~/Work/PhD/sbw-fire-interactions/nbr-recovery/data/paired_fires/on-qc-defol-table.csv"
+matchedPairsDefol <- #"<path/to/my/file>"
+matchedPairsNonDefol <- #"<path/to/my/file>"
+defolInfo <- #"<path/to/my/file>"
 
 # Replace the target list below with your own:
 list(
