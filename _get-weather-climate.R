@@ -14,7 +14,7 @@ tar_source("src/weather-analysis-tools.R")
 RES_DIR <- "results/"
 path2ConfigFile <-  "~/Code/python-rgee-config.py"  #example "~/Code/python-rgee-config.py"
 filename <- "on-qc-wx-clim"
-extension <- ".shp"
+extension <- ".csv"
 
 # point to config file
 reticulate::py_run_file(path2ConfigFile)
@@ -26,12 +26,12 @@ rgee::ee_Initialize()
 bandList <- list('temperature_2m', 'total_precipitation_sum')
 
 # set filter image dates
-startDay <- 120  #ex. 120 (April 30)
+startDay <- 90  #ex. 120 (April 30)
 endDay <- 243   #ex. 243 (Aug 31)
 
 
 #get preprocessed data
-processed_data <- tar_read(preppedData, store = "store_preprocessing")
+processed_data <- tar_read(data.tsdgt1, store = "store_preprocessing")
 
 #set values to map over
 values_df <- tibble::tibble(processed_data) |> dplyr::select(c(id, prov))

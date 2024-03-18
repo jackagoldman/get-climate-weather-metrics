@@ -1,5 +1,7 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 cleanDataDefol|function|d95f74c4bf34a74d|||||||||||||||
+data.tsdgt1|stem|3752415edd5754fe|d1ff4f9410093626|fe3fdb246e0284f3|-80475501||t19800.7381441569s|0af8bf17d6fb91c9|4553096|rds|local|vector|||0.025||
+data2sf|function|768e129c75d310eb|||||||||||||||
 defolInfo|object|91b097aa2ef368cd|||||||||||||||
 defolInfoFile|stem|9b72a83849cd3379|3fc73cbec5ce985e|900d6f63e0d2b096|577547711|~/Work/PhD/sbw-fire-interactions/nbr-recovery/data/paired_fires/on-qc-defol-table.csv|t19793.8262529179s|273bb875f40c4c3a|3769|file|local|vector|||0||
 defolInfoTable|stem|3a990b4d80b53170|7e6ee44264837173|d955082cacc8de4d|1292096428||t19797.7290546564s|cd7662a5b5ca6b8f|1456|rds|local|vector|||0.139||
@@ -10,8 +12,10 @@ matchedDefolFile|stem|b13fc37645861821|b9c636b09aaacfea|d9459bc16caa86f9|-159606
 matchedNonDefolFile|stem|b4ae74098dbb8bb1|de241bd79ab0f396|cf4de7588ec6b06c|-1215933650|~/Desktop/OneDrive - University of Toronto/Data/chapter_3/on-qc-nondefol.shp|t19797.7185261612s|298feda9c059b46f|2036768|file|local|vector|||0||
 matchedPairsDefol|object|384fafec3327ede9|||||||||||||||
 matchedPairsNonDefol|object|df7b231aa9b1f147|||||||||||||||
+matchTsd|function|2625c26480e6d4d7|||||||||||||||
 NondefolShp|stem|864cdf8fa2fa7f28|f2f06328e1392cde|a76a6cad653086e5|-1938623681||t19797.7290570995s|868ee0853033a986|1556069|rds|local|vector|||0.013||
 output_wx|function|9b559c8b42952c70|||||||||||||||
 preppedData|stem|f4128bf7054e3f00|833ef67f3e517180|dd7e4503876e04c5|-212216012||t19797.7564844602s|3a8994216e20f3d5|4609070|rds|local|vector|||0.025||
-timeFrame|function|7aa6adae0e97075c|||||||||||||||
-weatherIndices|function|433225be4ed07453|||||||||||||||
+removeTsd0|function|62f93ba3fea3495c|||||||||||||||
+timeFrame|function|002f275c2ea3748d|||||||||||||||
+weatherIndices|function|039499178172e506|||||||||||||||

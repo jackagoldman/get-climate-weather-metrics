@@ -16,6 +16,21 @@ cleanDataDefol <- function(defol, nondefol, defol.info){
   
 }
 
+# remove fires where time since defolaited = 1
+
+removeTsd0 <- function(data){
+  defol <- filter(data, defoliated == "1")
+  tsd0names <- filter(defol, tsd == "0")
+  defol <- filter(defol, tsd != "0") 
+  
+  nondefol <- filter(data, defoliated == "0")
+  nondefol <- filter(nondefol, ! Fire_ID %in% tsd0names$Fire_ID)
+  
+  res <- rbind(defol, nondefol)
+  
+  return(res)
+}
+
 
 data2sf <- function(data){
   
@@ -96,9 +111,29 @@ output_wx <- function(data, RES_DIR, filename, extension){
   path <- paste0(RES_DIR + "_" + filename + extension)
   st_write(data, path)
   }else if(extension == ".csv"){
+    data <- data |>  st_as_sf()  |>  sfc_as_cols() |> st_drop_geometry()
     path <- paste0(RES_DIR + "_" + filename + extension)
     readr::write_csv(data, path)
   }
   
 }
 
+#' transform point to x, y column
+#' @author {Josh M. London}
+#' taken from https://github.com/r-spatial/sf/issues/231
+#' @param x 
+#' @param names 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+sfc_as_cols <- function(x, names = c("x","y")) {
+  
+  stopifnot(inherits(x,"sf") && inherits(sf::st_geometry(x),"sfc_POINT"))
+  ret <- do.call(rbind,sf::st_geometry(x))
+  ret <- tibble::as_tibble(ret)
+  stopifnot(length(names) == ncol(ret))
+  ret <- setNames(ret,names)
+  dplyr::bind_cols(x,ret)
+}
