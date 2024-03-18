@@ -1,2 +1,4 @@
 # get-climate-weather-metrics
-workflow to extract climate and weather indices from era5
+
+
+This repository is a pipeline to extract climate and weather data from era5 image collections in Google Earth Engine. 
