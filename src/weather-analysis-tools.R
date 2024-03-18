@@ -51,7 +51,6 @@ getBuffer <- function(data){
   
 }
 
-
 # need to do for both defoliated/non-defoliated for control, use time frame for defol for non-defol
 timeFrame <- function(data){
   year <- data |> select(c(Fire_Year)) |> st_drop_geometry() 
@@ -59,7 +58,8 @@ timeFrame <- function(data){
   tsd <- data |> select(c(tsd)) |>  st_drop_geometry() 
   tsd <- mutate(tsd, tsd = as.numeric(tsd))
   time.gap <- (year - tsd) 
-  time.gap <- lubridate::ymd(time.gap, truncated = 2L) |> as.character() |> as.data.frame()
+  time.gap <- lubridate::ymd(time.gap, truncated = 2L) 
+  time.gap <- time.gap |> as.character() |> as.data.frame()
   year <- lubridate::ymd(year, truncated = 2L) |> as.character() |> as.data.frame()
   res <- cbind(time.gap, year)
   colnames(res) <- c("time.gap", "year")
