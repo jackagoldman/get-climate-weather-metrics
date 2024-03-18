@@ -23,5 +23,6 @@ list(
   tar_target(NondefolShp, sf::st_read(matchedNonDefolFile)),
   tar_target(defolInfoFile, defolInfo, format = "file"),
   tar_target(defolInfoTable, readr::read_csv(defolInfoFile)),
-  tar_target(preppedData, cleanDataDefol(defolShp, NondefolShp, defolInfoTable))
+  tar_target(preppedData, cleanDataDefol(defolShp, NondefolShp, defolInfoTable)),
+  tar_target(data.tsdgt1, removeTsd0(preppedData))
 )
