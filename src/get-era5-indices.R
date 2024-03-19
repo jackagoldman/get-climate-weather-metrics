@@ -444,7 +444,7 @@ getDailyWx <- function(values_df, data){
   #create empty list
   qlist <- list()
   
-  for(i in 1:nrow(values_df2)){
+  for(i in 1:nrow(values_df)){
     
     data1 <- data[i,]
     id <- data1$id
