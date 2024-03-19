@@ -192,11 +192,8 @@ getWxClim <- function(values_df, data){
 }
 
 
-
-
-
-# 
-fwiIndices <- function(data, startDay, enDay){
+#
+getDC <- function(data, startDay, enDay){
   
   require(weathermetrics)
   require(sf)
@@ -213,7 +210,6 @@ fwiIndices <- function(data, startDay, enDay){
   #return fire centroids as ee object
   fireCentee <- sf_as_ee(fireCent)
   
-  
   #get timeframe 
   #NOTE : timeframe must be from year of defol to year of fire OR date of fire, right now its year of fire
   #should this be summer temperature only? or growing season?
@@ -224,10 +220,97 @@ fwiIndices <- function(data, startDay, enDay){
   
   ###### PRE-FIRE
   #filter imagery by data and filter to point
-  era5 <- ee$ImageCollection("ECMWF/ERA5_LAND/DAILY_AGGR")$filterDate(imageStart, fireYear)$filterBounds(fireCentee)
+  era5 <- ee$ImageCollection("ECMWF/ERA5_LAND/DAILY_AGGR")$
+    filterDate(imageStart, fireYear)$
+    filterBounds(fireCentee)$
+    filter(ee$Filter$dayOfYear(startDay, 125))$
+    select('temperature_2m', 'dewpoint_temperature_2m', 'total_precipitation_sum')
+  
+  # get a single image with multiple bands for each day
+  
+  # need to correct for kelvin by converting to celcius ( k -273.15 = c)
+  
+  withRh <- ee$ImageCollection(era5$map(function(image){
+    dt <- image$select("dewpoint_temperature_2m")$rename("dt")
+    t <- image$select("temperature_2m")$rename("t")
+    dt <- dt$subtract(273.15)
+    t <- t$subtract(273.15)
+    ppt <- image$select("total_precipitation_sum")$rename("ppt")
+    ppt <- ppt$divide(1000)
+    b1 <- dt$multiply(17.67)$divide(dt$add(243))$exp()
+    b2 <- t$multiply(17.67)$divide(t$add(243))$exp()
+    b3 <- b1$divide(b2)
+    b4 <- b3$multiply(100)$int()$rename("rh")
+    date <- image$date()
+    doy <- date$getRelative("day", "year")
+    doyImage <- ee$Image(doy)$
+      rename("doy")$
+      int()
+    month <- date$getRelative("month", "year")
+    monthImage <- ee$Image(month)$
+      rename("mon")$
+      int
+    
+    img <- b4$
+      addBands(t)$
+      addBands(month)$
+      addBands(ppt)$
+      addBands(doyImage)# Appropriate use of clip.
+    
+    return(img)
+      }
+    ))
+  
+  # cast to list 
+  preList <- withRh$toList(withRh$size())
+  
+  # for each image. loop through and extract
+  #get sequence lenggth for for loop
+  startLoop <- 1
+  endLoop <- (endDay - startday) * as.numeric(sub("-.*","", imageStart)) # set to length of start/end day? *multiplied by the time.gap
+ 
+  #greate empty list
+  mylist <- list()
+  for(i in startLoop:5){ # set to length of start/end day? *multiplied by the time.gap
+    # get image based on location in list
+    tI <- ee$Image(preList$get(i))
+    
+    # extract metrics for each image
+    mets <- ee_extract(
+      x = tI,
+      y = fireCentee,
+      scale = 250,
+      fun = ee$Reducer$mean(), # mean or sum
+      sf = TRUE
+    )
+    
+    # clean metrics by getting lat long and removing geometry
+    mets <- mets |> 
+      dplyr::mutate(lon = sf::st_coordinates(geometry)[,1],
+                    lat = sf::st_coordinates(geometry)[,2]) |> st_drop_geometry()
+    
+    # input into empty list
+    mylist[[i]] <- mets
+    i + 1
+  }
   
   
+  # bind rresults into dataframe
+ res <- do.call(rbind, mylist)
+
+ # get month from DOY and put into column
+ res <- rename(res, mon = constant)
   
+  # take dataframe and using cffdrs package computer DC.
+ # start day 120 with default dc_yda value of 15
+ # after that every day uses the previous days value
+ # for loop 
+ #if doy = 120, set first arg to 15. run loop through once
+ # if doy is anything other than 120, input output value 
+ # from last iteraction as dc_yda value in this one
+  drought_code(15, 9.804529, 54, 6.8, 48.3312, 4)
   
   
 }
+
+
