@@ -12,7 +12,7 @@ tar_source("src/weather-analysis-tools.R")
 
 #paths
 RES_DIR <- # ex. "~/Desktop/"
-path2ConfigFile <- #example "~/Code/python-rgee-config.py"
+path2ConfigFile <- "~/Code/python-rgee-config.py" #example "~/Code/python-rgee-config.py"
 filename <- # ex. "on-qc-wx-clim"
 extension <- # ex. ".shp" or ".csv"
 
@@ -43,11 +43,17 @@ values_df <- tibble::tibble(processed_data) |> dplyr::select(c(id))
 
 # pipeline
 
-list(
-  tar_target(df.matchedTsd, matchTsd(processed_data)),
+pre_post_climate <- list(tar_target(df.matchedTsd, matchTsd(processed_data)),
   tar_target(wxClimData, getWxClim(values_df, df.matchedTsd)),
-  tar_target(write.results, output_wx(wxClimData, RES_DIR, filename, extension))
+  tar_target(write.results, output_wx(wxClimData, RES_DIR, filename, extension)))
+
+fireWeather <- list(
+  tar_target(dailyWeather, getDailyWeather(df.matchedTsd, startDay, endDay)),
+  tar_target(droughtCode, getDc(dailyWeather))
 )
+
+
+list(pre_post_climate, fireWeather)
 
 
 
