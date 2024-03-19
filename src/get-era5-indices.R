@@ -192,8 +192,12 @@ getWxClim <- function(values_df, data){
 }
 
 
+
+
+
+
 #
-getDailyWeather <- function(data, startDay, enDay){
+dailyWeather <- function(data, startDay, enDay){
   
   require(weathermetrics)
   require(sf)
@@ -223,14 +227,21 @@ getDailyWeather <- function(data, startDay, enDay){
   era5 <- ee$ImageCollection("ECMWF/ERA5_LAND/DAILY_AGGR")$
     filterDate(imageStart, fireYear)$
     filterBounds(fireCentee)$
-    filter(ee$Filter$dayOfYear(startDay, 125))$
-    select('temperature_2m', 'dewpoint_temperature_2m', 'total_precipitation_sum')
+    filter(ee$Filter$dayOfYear(startDay, endDay))$
+    select('temperature_2m', 'dewpoint_temperature_2m', 'total_precipitation_sum', 
+           'u_component_of_wind_10m', 'v_component_of_wind_10m')
   
 
   
   # need to correct for kelvin by converting to celcius ( k -273.15 = c)
   
   withRh <- ee$ImageCollection(era5$map(function(image){
+    vws <- image$select("v_component_of_wind_10m")$rename("vws")
+    uws <- image$select("u_component_of_wind_10m")$rename("uws")
+    vws <- vws$exp()
+    uws <- uws$exp()
+    ws <- vws$add(uws)$rename("ws")
+    ws <- ws$sqrt()
     dt <- image$select("dewpoint_temperature_2m")$rename("dt")
     t <- image$select("temperature_2m")$rename("t")
     dt <- dt$subtract(273.15)
@@ -260,6 +271,7 @@ getDailyWeather <- function(data, startDay, enDay){
       addBands(t)$
       addBands(month)$
       addBands(ppt)$
+      addBands(ws)$
       addBands(year)$
       addBands(doyImage)# Appropriate use of clip.
     
@@ -273,11 +285,11 @@ getDailyWeather <- function(data, startDay, enDay){
   # for each image. loop through and extract
   #get sequence lenggth for for loop
   startLoop <- 1
-  endLoop <- (endDay - startday) * as.numeric(sub("-.*","", imageStart)) # set to length of start/end day? *multiplied by the time.gap
+  endLoop <- (endDay - startDay) * ((as.numeric(sub("-.*","", fireYear))) - (as.numeric(sub("-.*","", imageStart)))) # set to length of start/end day? *multiplied by the time.gap
  
   #greate empty list
   mylist <- list()
-  for(i in startLoop:5){ # set to length of start/end day? *multiplied by the time.gap
+  for(i in startLoop:endLoop){ # set to length of start/end day? *multiplied by the time.gap
     # get image based on location in list
     tI <- ee$Image(preList$get(i))
     
@@ -311,7 +323,8 @@ getDailyWeather <- function(data, startDay, enDay){
 
 }
 
-getDC <- function(data){
+
+getDC <- function(res){
   
   # take dataframe and using cffdrs package computer DC.
   # start day 120 with default dc_yda value of 15
@@ -368,8 +381,8 @@ getDC <- function(data){
 }
 
 
-# needs windspeed
-getFFMC <- function(data){
+
+getFFMC <- function(res){
   
   # take dataframe and using cffdrs package computer DC.
   # start day 120 with default dc_yda value of 15
@@ -400,7 +413,7 @@ getFFMC <- function(data){
       if(c("120") %in% row$doy){
         # if it is start of list, return fifteen
         row <- mutate(row, ffmc_yda = c(15))
-        ffmc <- drought_code(row$ffmc_yda, row$t, row$rh, row$ws, row$ppt)
+        ffmc <- fine_fuel_moisture_code(row$ffmc_yda, row$t, row$rh, row$ws, row$ppt)
         # change dc to dc_yda
         row <- mutate(row, ffmc_yda = ffmc)
         row <- rename(row, ffmc = ffmc_yda)
@@ -408,7 +421,7 @@ getFFMC <- function(data){
         # make dc_yda value
         ffmc_yda <- ffmc
       }else{
-        ffmc <- drought_code(ffmc_yda, row$t, row$rh, row$ws, row$ppt)
+        ffmc <- fine_fuel_moisture_code(ffmc_yda, row$t, row$rh, row$ws, row$ppt)
         row <- mutate(row, ffmc = ffmc)
         ffmc_yda <- ffmc
       }
@@ -423,5 +436,22 @@ getFFMC <- function(data){
   }
   ffmc_output <- do.call(rbind, iloop)
   return(ffmc_output)
+}
+
+
+getDailyWx <- function(values_df, data){
+  
+  #create empty list
+  qlist <- list()
+  
+  for(i in 1:nrow(values_df)){
+    
+    qlist[[i]] <-  dailyWeather(data[i,], startDay, endDay)
+    i + 1
+    
+  }
+  res <- do.call(rbind, qlist)
+  
+  return(res)
 }
 

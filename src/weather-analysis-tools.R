@@ -116,6 +116,20 @@ output_wx <- function(data, RES_DIR, filename, extension){
     readr::write_csv(data, path)
   }
   
+  
+output_daily <- function(data, RES_DIR, type)
+  
+  if(type == dc){
+    path <- paste(RES_DIR, "on-qc-daily-dc.csv")
+    write_csv(data, path)
+  }else if (type == ffmc){
+    path <- paste(RES_DIR, "on-qc-daily-ffmc.csv")
+    write_csv(data, path)
+  }else if(type == weather){
+    path <- paste(RES_DIR, "on-qc-daily-weather.csv")
+    write_csv(data, path)
+  }
+  
 }
 
 #' transform point to x, y column
