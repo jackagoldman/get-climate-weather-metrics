@@ -446,7 +446,11 @@ getDailyWx <- function(values_df, data){
   
   for(i in 1:nrow(values_df)){
     
-    qlist[[i]] <-  dailyWeather(data[i,], startDay, endDay)
+    dw <-  dailyWeather(data[i,], startDay, endDay)
+    id <- values_df[values_df$id == i,]
+    dw <- mutate(dw, id == rep(id))
+    
+    qlist[[i]] <-  dw
     i + 1
     
   }
