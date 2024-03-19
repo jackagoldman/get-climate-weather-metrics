@@ -197,7 +197,7 @@ getWxClim <- function(values_df, data){
 
 
 #
-dailyWeather <- function(data, startDay, enDay){
+dailyWeather <- function(data, startDay, endDay){
   
   require(weathermetrics)
   require(sf)
@@ -444,11 +444,14 @@ getDailyWx <- function(values_df, data){
   #create empty list
   qlist <- list()
   
-  for(i in 1:nrow(values_df)){
+  for(i in 1:nrow(values_df2)){
     
-    dw <-  dailyWeather(data[i,], startDay, endDay)
-    id <- values_df[values_df$id == i,]
-    dw <- mutate(dw, id == rep(id))
+    data1 <- data[i,]
+    id <- data1$id
+    
+    dw <-  dailyWeather(data1, startDay, endDay)
+    
+    dw <- mutate(dw, id = rep(id))
     
     qlist[[i]] <-  dw
     i + 1
