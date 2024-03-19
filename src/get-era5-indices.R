@@ -171,10 +171,15 @@ weatherIndices <- function(data, bandList, startDay, endDay){
 }
 
 
-
-
-# loop for function
-
+#' Wrapper around weatherIndices function 
+#'
+#' @param values_df 
+#' @param data 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getWxClim <- function(values_df, data){
   
   #create empty list
@@ -194,9 +199,16 @@ getWxClim <- function(values_df, data){
 
 
 
-
-
-#
+#' Gets daily weather for centroid using era5
+#'
+#' @param data 
+#' @param startDay 
+#' @param endDay 
+#'
+#' @return dataframe. columns for month, doy, temp(t), relative humidity(rh), precipitation(ppt), wind speed (ws), id, lat, lon
+#' @export
+#'
+#' @examples
 dailyWeather <- function(data, startDay, endDay){
   
   require(weathermetrics)
@@ -324,6 +336,14 @@ dailyWeather <- function(data, startDay, endDay){
 }
 
 
+#' Calculates daily drought code
+#'
+#' @param res dataframe. Results table from dailyWeather function
+#'
+#' @return dataframe. with additional drought code (DC) column to existing daily weather dataframe
+#' @export
+#'
+#' @examples
 getDC <- function(res){
   
   # take dataframe and using cffdrs package computer DC.
@@ -382,6 +402,14 @@ getDC <- function(res){
 
 
 
+#' Calculates daily ffmc
+#'
+#' @param res 
+#'
+#' @return dataframe. with additional fine fuel moisture code (FFMC) column to existing daily weather dataframe
+#' @export
+#'
+#' @examples
 getFFMC <- function(res){
   
   # take dataframe and using cffdrs package computer DC.
@@ -439,6 +467,15 @@ getFFMC <- function(res){
 }
 
 
+#' Wrapper around daily weather function
+#'
+#' @param values_df 
+#' @param data 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getDailyWx <- function(values_df, data){
   
   #create empty list
