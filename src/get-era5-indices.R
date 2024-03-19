@@ -193,7 +193,7 @@ getWxClim <- function(values_df, data){
 
 
 #
-getDC <- function(data, startDay, enDay){
+getDailyWeather <- function(data, startDay, enDay){
   
   require(weathermetrics)
   require(sf)
@@ -226,7 +226,7 @@ getDC <- function(data, startDay, enDay){
     filter(ee$Filter$dayOfYear(startDay, 125))$
     select('temperature_2m', 'dewpoint_temperature_2m', 'total_precipitation_sum')
   
-  # get a single image with multiple bands for each day
+
   
   # need to correct for kelvin by converting to celcius ( k -273.15 = c)
   
@@ -250,11 +250,17 @@ getDC <- function(data, startDay, enDay){
     monthImage <- ee$Image(month)$
       rename("mon")$
       int
+    year <- date$get("year")
+    yearImage <- ee$Image(year)$
+      rename("year")$
+      int
+    
     
     img <- b4$
       addBands(t)$
       addBands(month)$
       addBands(ppt)$
+      addBands(year)$
       addBands(doyImage)# Appropriate use of clip.
     
     return(img)
@@ -298,19 +304,124 @@ getDC <- function(data, startDay, enDay){
   # bind rresults into dataframe
  res <- do.call(rbind, mylist)
 
- # get month from DOY and put into column
+ # rename month and year column
  res <- rename(res, mon = constant)
-  
-  # take dataframe and using cffdrs package computer DC.
- # start day 120 with default dc_yda value of 15
- # after that every day uses the previous days value
- # for loop 
- #if doy = 120, set first arg to 15. run loop through once
- # if doy is anything other than 120, input output value 
- # from last iteraction as dc_yda value in this one
-  drought_code(15, 9.804529, 54, 6.8, 48.3312, 4)
-  
-  
+ res <- rename(res, year = constant_1)
+ return(res)
+
 }
 
+getDC <- function(data){
+  
+  # take dataframe and using cffdrs package computer DC.
+  # start day 120 with default dc_yda value of 15
+  # after that every day uses the previous days value
+  # for loop 
+  #if doy = 120, set first arg to 15. run loop through once
+  # if doy is anything other than 120, input output value 
+  # from last iteraction as dc_yda value in this one
+  
+  # loop through each row in each year
+  # get year 
+  jloop <- list()
+  iloop <- list()
+  yr <- unique(res$year)
+  for(i in yr){
+    
+    #subset results by year
+    res_yr <- res[res$year == i,]
+    
+    #make sure its ordered by doy
+    res_yr <- res_yr[order(res_yr$doy),]
+    
+    for(j in 1:nrow(res_yr)){
+      
+      # get row
+      row <- res_yr[j,]
+      
+      if(c("120") %in% row$doy){
+        # if it is start of list, return fifteen
+        row <- mutate(row, dc_yda = c(15))
+        dc <- drought_code(row$dc_yda, row$t, row$rh, row$ppt, row$lat, row$mon)
+        # change dc to dc_yda
+        row <- mutate(row, dc_yda = dc)
+        row <- rename(row, dc = dc_yda)
+        # ? maybe dettach row dataframe here?
+        # make dc_yda value
+        dc_yda <- dc
+      }else{
+        dc <- drought_code(dc_yda, row$t, row$rh, row$ppt, row$lat, row$mon)
+        row <- mutate(row, dc = dc)
+        dc_yda <- dc
+      }
+      
+      jloop[[j]] <- row
+      
+    }
+    output <- do.call(rbind, jloop)
+    
+    iloop[[i]] <- output
+    
+  }
+  dc_output <- do.call(rbind, iloop)
+  return(dc_output)
+}
+
+
+# needs windspeed
+getFFMC <- function(data){
+  
+  # take dataframe and using cffdrs package computer DC.
+  # start day 120 with default dc_yda value of 15
+  # after that every day uses the previous days value
+  # for loop 
+  #if doy = 120, set first arg to 15. run loop through once
+  # if doy is anything other than 120, input output value 
+  # from last iteraction as dc_yda value in this one
+  
+  # loop through each row in each year
+  # get year 
+  jloop <- list()
+  iloop <- list()
+  yr <- unique(res$year)
+  for(i in yr){
+    
+    #subset results by year
+    res_yr <- res[res$year == i,]
+    
+    #make sure its ordered by doy
+    res_yr <- res_yr[order(res_yr$doy),]
+    
+    for(j in 1:nrow(res_yr)){
+      
+      # get row
+      row <- res_yr[j,]
+      
+      if(c("120") %in% row$doy){
+        # if it is start of list, return fifteen
+        row <- mutate(row, ffmc_yda = c(15))
+        ffmc <- drought_code(row$ffmc_yda, row$t, row$rh, row$ws, row$ppt)
+        # change dc to dc_yda
+        row <- mutate(row, ffmc_yda = ffmc)
+        row <- rename(row, ffmc = ffmc_yda)
+        # ? maybe dettach row dataframe here?
+        # make dc_yda value
+        ffmc_yda <- ffmc
+      }else{
+        ffmc <- drought_code(ffmc_yda, row$t, row$rh, row$ws, row$ppt)
+        row <- mutate(row, ffmc = ffmc)
+        ffmc_yda <- ffmc
+      }
+      
+      jloop[[j]] <- row
+      
+    }
+    output <- do.call(rbind, jloop)
+    
+    iloop[[i]] <- output
+    
+  }
+  ffmc_output <- do.call(rbind, iloop)
+  return(ffmc_output)
+}
 
