@@ -12,7 +12,7 @@ tar_source("src/weather-analysis-tools.R")
 tar_source("src/fwi-equations.R")
 
 #paths
-RES_DIR <- # ex. "~/Desktop/"
+RES_DIR <- "~/Desktop/" # ex. "~/Desktop/"
 path2ConfigFile <- "~/Code/python-rgee-config.py" #example "~/Code/python-rgee-config.py"
 filename <- # ex. "on-qc-wx-clim"
 extension <- # ex. ".shp" or ".csv"
