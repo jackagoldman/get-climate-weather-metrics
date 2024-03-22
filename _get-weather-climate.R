@@ -1,9 +1,19 @@
 library(targets)
 library(tarchetypes) 
+library(crew)
+library(rgee)
+
+mycontroller <- crew::crew_controller_local(
+  name = "my_controller",
+  workers = 10,
+  seconds_idle = 3,
+  reset_globals = FALSE
+)
 
 # Set target options:
 tar_option_set(
-  packages = c("tibble", "sf", "tidyverse", "reticulate", "rgee", "weathermetrics") 
+  packages = c("tibble", "sf", "tidyverse", "reticulate", "rgee", "weathermetrics") ,
+  error = "abridge"
 )
 
 # source scripts
@@ -14,8 +24,8 @@ tar_source("src/fwi-equations.R")
 #paths
 RES_DIR <- "~/Desktop/" # ex. "~/Desktop/"
 path2ConfigFile <- "~/Code/python-rgee-config.py" #example "~/Code/python-rgee-config.py"
-filename <- # ex. "on-qc-wx-clim"
-extension <- # ex. ".shp" or ".csv"
+filename <- "on-qc-wx-clim" # ex. "on-qc-wx-clim"
+extension <- ".csv" # ex. ".shp" or ".csv"
 
 # point to config file
 reticulate::py_run_file(path2ConfigFile)
@@ -44,15 +54,16 @@ values_df <- tibble::tibble(processed_data) |> dplyr::select(c(id))
 
 # pipeline
 
-list(tar_target(df.matchedTsd, matchTsd(processed_data)),
+list(tar_target(df.matchedTsd, matchTsd(processed_data), priority = 1),
+  tar_target(defolOnly, command = dplyr::filter(df.matchedTsd, defoliated == "1"), priority = 1),
+  tar_target(dailyWx.res, getDailyWx(values_df, defolOnly), priority = 1),
+  tar_target(weather.results, output_daily(dailyWx.res, RES_DIR, "weather"), priority = 1),
   tar_target(wxClimData, getWxClim(values_df, df.matchedTsd)),
   tar_target(write.results, output_wx(wxClimData, RES_DIR, filename, extension)),
-  tar_target(dailyWx.res, getDailyWx(values_df, df.matchedTsd)),
-  tar_target(weather.results, output_daily(dailyWx.res, RES_DIR, "weather")),
-  tar_target(droughtCode, getDC(dailyWx.res)),
-  tar_target(dc.results, output_daily(droughtCode, RES_DIR, "dc")),
-  tar_target(finefuelMC, getFFMC(dailyWx.res)),
-  tar_target(ffmc.results, output_daily(finefuelMC, RES_DIR, "ffmc"))
+  tar_target(droughtCode, getDC(dailyWx.res), priority = 1),
+  tar_target(dc.results, output_daily(droughtCode, RES_DIR, "dc"), priority = 1),
+  tar_target(finefuelMC, getFFMC(dailyWx.res), priority = 1),
+  tar_target(ffmc.results, output_daily(finefuelMC, RES_DIR, "ffmc"), priority = 1)
 )
 
 

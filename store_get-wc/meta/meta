@@ -1,5 +1,6 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
-dailyWx.res|stem||2a487d42f71b68f9|9737b4f239f6e01e|-903575688||t19801.5797188005s||0|rds|local|vector|||0.011||object values_df2 not found
+dailyWx.res|stem||2fe0c39ce58dae41|0c013a1edc07d743|-903575688||t19801.5797188005s||0|rds|local|vector|||5.288|package sf was built under R version 4.3.1. package ggplot2 was built under R version 4.3.1. package tidyr was built under R version 4.3.1. package dplyr was built under R version 4.3.1. package stringr was built under R version 4.3.1. package lubridate was built under R version 4.3.1. package reticulate was built under R version 4.3.1. package rgee was built under R version 4.3.1|ee.ee_exception.EEException Earth Engine client library not initialized. Run ee.InitializeRun reticulatepy_last_error for details.
+defolOnly|stem|b2241096247a9ad3|301393472e781160|dc77365341858e8b|-1314913117||t19803.5358642663s|2b0693cf721b1082|3047762|rds|local|vector|||1.242|package sf was built under R version 4.3.1. package ggplot2 was built under R version 4.3.1. package tidyr was built under R version 4.3.1. package dplyr was built under R version 4.3.1. package stringr was built under R version 4.3.1. package lubridate was built under R version 4.3.1. package reticulate was built under R version 4.3.1. package rgee was built under R version 4.3.1|
 df.matchedTsd|stem|03071272b4d5c0fb|32be94dda695c6e2|a79ec794435cabfd|-1466271840||t19801.5731142172s|36500438f9c7db83|4553142|rds|local|vector|||0.749|package sf was built under R version 4.3.1. package ggplot2 was built under R version 4.3.1. package tidyr was built under R version 4.3.1. package dplyr was built under R version 4.3.1. package stringr was built under R version 4.3.1. package lubridate was built under R version 4.3.1. package reticulate was built under R version 4.3.1. package rgee was built under R version 4.3.1|
 droughtCode|stem|d36ea1299fa8d732|25eff3614d404b05|555e91d3a301ebb8|528416400||t19801.5797179531s||43|rds|local|vector|||0.576|package sf was built under R version 4.3.1. package ggplot2 was built under R version 4.3.1. package tidyr was built under R version 4.3.1. package dplyr was built under R version 4.3.1. package stringr was built under R version 4.3.1. package lubridate was built under R version 4.3.1. package reticulate was built under R version 4.3.1. package rgee was built under R version 4.3.1|object of type closure is not subsettable
 finefuelMC|stem|d36ea1299fa8d732|65c1246ab124cfa1|da2d3e599087a622|2026105033||t19801.5797181438s|44e327d1ee1978d7|43|rds|local|vector|||0.012||
@@ -7,18 +8,20 @@ fireWeather|object|c5b81edbc42b7110|||||||||||||||
 getDailyWeather|function|bf8049d56ca52372|||||||||||||||
 pre_post_climate|object|74fe14007c14c708|||||||||||||||
 rstudio_addin_tar_make_bg|function|31c29ad5c79a6c4b|||||||||||||||
-extension|object|53d8d493803e3fcd|||||||||||||||
+wxClimData|stem||1a9af154128ec011|b23090ac7fab1aa7|-754409537||t19803.5359116135s||0|rds|local|vector|||5.166|package sf was built under R version 4.3.1. package ggplot2 was built under R version 4.3.1. package tidyr was built under R version 4.3.1. package dplyr was built under R version 4.3.1. package stringr was built under R version 4.3.1. package lubridate was built under R version 4.3.1. package reticulate was built under R version 4.3.1. package rgee was built under R version 4.3.1|ee.ee_exception.EEException Earth Engine client library not initialized. Run ee.InitializeRun reticulatepy_last_error for details.
+extension|object|618a59fd45645e1f|||||||||||||||
 endDay|object|60cf4163658a3202|||||||||||||||
 startDay|object|045b07e719c4cc68|||||||||||||||
-.Random.seed|object|51b44a1bed21c320|||||||||||||||
+.Random.seed|object|70f5bbf381cb09f1|||||||||||||||
 bandList|object|4ca5f275b858f9b8|||||||||||||||
-RES_DIR|object|3ef8f33369c99fcc|||||||||||||||
+RES_DIR|object|c279c83c6600d194|||||||||||||||
 getCentroid|function|a49d78da6e2af13b|||||||||||||||
+mycontroller|object|66807049354429b7|||||||||||||||
 processed_data|object|f0198e30c7a29afc|||||||||||||||
 matchTsd|function|2625c26480e6d4d7|||||||||||||||
 data2sf|function|768e129c75d310eb|||||||||||||||
 values_df|object|45a272c4102b8944|||||||||||||||
-filename|object|53d8d493803e3fcd|||||||||||||||
+filename|object|3397bfdb7bd213f5|||||||||||||||
 drought_code|function|359d59d3d475d12e|||||||||||||||
 sfc_as_cols|function|716c7cda032b1200|||||||||||||||
 cleanDataDefol|function|d95f74c4bf34a74d|||||||||||||||
@@ -34,18 +37,19 @@ dailyWeather|function|dd14df96dbdaa12a|||||||||||||||
 weatherIndices|function|b438618c4c41b7f6|||||||||||||||
 getDailyWx|function|61ec89a8227cf2f4|||||||||||||||
 getWxClim|function|230f4e5679f0e630|||||||||||||||
-extension|object|53d8d493803e3fcd
+extension|object|618a59fd45645e1f
 endDay|object|60cf4163658a3202
 startDay|object|045b07e719c4cc68
-.Random.seed|object|64a7f88529afa460
+.Random.seed|object|823f292c7d56c4fe
 bandList|object|4ca5f275b858f9b8
-RES_DIR|object|3ef8f33369c99fcc
+RES_DIR|object|c279c83c6600d194
 getCentroid|function|a49d78da6e2af13b
+mycontroller|object|66807049354429b7
 processed_data|object|f0198e30c7a29afc
 matchTsd|function|2625c26480e6d4d7
 data2sf|function|768e129c75d310eb
 values_df|object|45a272c4102b8944
-filename|object|53d8d493803e3fcd
+filename|object|3397bfdb7bd213f5
 drought_code|function|359d59d3d475d12e
 sfc_as_cols|function|716c7cda032b1200
 cleanDataDefol|function|d95f74c4bf34a74d
