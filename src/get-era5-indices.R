@@ -222,6 +222,8 @@ dailyWeather <- function(data, startDay, endDay){
   fireCent <- data1$centroid
   fireID <- data1$id
   
+  #get geometry
+  geom <- sf_as_ee(data$geometry)
   
   #return fire centroids as ee object
   fireCentee <- sf_as_ee(fireCent)
@@ -237,11 +239,12 @@ dailyWeather <- function(data, startDay, endDay){
   ###### PRE-FIRE
   #filter imagery by data and filter to point
   era5 <- ee$ImageCollection("ECMWF/ERA5_LAND/DAILY_AGGR")$
-    filterDate(imageStart, fireYear)$
-    filterBounds(fireCentee)$
-    filter(ee$Filter$dayOfYear(startDay, endDay))$
     select('temperature_2m', 'dewpoint_temperature_2m', 'total_precipitation_sum', 
-           'u_component_of_wind_10m', 'v_component_of_wind_10m')
+           'u_component_of_wind_10m', 'v_component_of_wind_10m')$
+    filterBounds(geom)$
+    filter(ee$Filter$dayOfYear(startDay, endDay))$
+    filterDate(imageStart, fireYear)
+    
   
 
   
@@ -297,7 +300,7 @@ dailyWeather <- function(data, startDay, endDay){
   # for each image. loop through and extract
   #get sequence lenggth for for loop
   startLoop <- 1
-  endLoop <- (endDay - startDay) * ((as.numeric(sub("-.*","", fireYear))) - (as.numeric(sub("-.*","", imageStart)))) # set to length of start/end day? *multiplied by the time.gap
+  endLoop <- (endDay - startDay) #* ((as.numeric(sub("-.*","", fireYear))) - (as.numeric(sub("-.*","", imageStart)))) # set to length of start/end day? *multiplied by the time.gap
  
   #greate empty list
   mylist <- list()
@@ -309,8 +312,8 @@ dailyWeather <- function(data, startDay, endDay){
     mets <- ee_extract(
       x = tI,
       y = fireCentee,
-      scale = 250,
-      fun = ee$Reducer$mean(), # mean or sum
+      scale = 10000,
+      fun = ee$Reducer$mean(),# mean or sum
       sf = TRUE
     )
     
