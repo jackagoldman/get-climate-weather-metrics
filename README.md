@@ -1,6 +1,8 @@
 # Data extraction pipeline for era5 reanalysis products from GEE
 
-![Static Badge](https://img.shields.io/badge/development-passing-green?style=flat-square)
+![Static Badge](https://img.shields.io/badge/build-passing-green?style=plastic)  ![Static Badge](https://img.shields.io/badge/dependencies-rgee_reticulate_sf-purple?style=plastic)
+
+
 
 
 This repository is a pipeline to extract climate and weather data from era5 image collections in Google Earth Engine. 
