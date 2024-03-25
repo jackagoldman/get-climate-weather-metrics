@@ -235,6 +235,8 @@ dailyWeather <- function(data, startDay, endDay){
   imageStart <- filterTime$time.gap
   fireYear <- filterTime$year
   
+  postFire <- ee$Date(fireYear)$advance(1, 'year')
+  
   
   ###### PRE-FIRE
   #filter imagery by data and filter to point
@@ -361,19 +363,21 @@ getDC <- function(res){
   # get year 
   jloop <- list()
   iloop <- list()
-  yr <- unique(res$year)
-  for(i in yr){
+  # for fire year set FWI set unique to fire ID
+  id <- unique(res$id)
+  
+  for(i in id){
     
     #subset results by year
-    res_yr <- res[res$year == i,]
+    res_id <- res[res$id == i,]
     
     #make sure its ordered by doy
-    res_yr <- res_yr[order(res_yr$doy),]
+    res_id <- res_id[order(res_id$doy),]
     
-    for(j in 1:nrow(res_yr)){
+    for(j in 1:nrow(res_id)){
       
       # get row
-      row <- res_yr[j,]
+      row <- res_id[j,]
       
       if(c("120") %in% row$doy){
         # if it is start of list, return fifteen
@@ -427,19 +431,19 @@ getFFMC <- function(res){
   # get year 
   jloop <- list()
   iloop <- list()
-  yr <- unique(res$year)
-  for(i in yr){
+  id <- unique(res$id)
+  for(i in id){
     
     #subset results by year
-    res_yr <- res[res$year == i,]
+    res_id <- res[res$id == i,]
     
     #make sure its ordered by doy
-    res_yr <- res_yr[order(res_yr$doy),]
+    res_id <- res_id[order(res_id$doy),]
     
-    for(j in 1:nrow(res_yr)){
+    for(j in 1:nrow(res_id)){
       
       # get row
-      row <- res_yr[j,]
+      row <- res_id[j,]
       
       if(c("120") %in% row$doy){
         # if it is start of list, return fifteen
