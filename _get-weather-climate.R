@@ -63,7 +63,14 @@ list(tar_target(df.matchedTsd, matchTsd(processed_data), priority = 1),
   tar_target(droughtCode, getDC(dailyWx.res), priority = 1),
   tar_target(dc.results, output_daily(droughtCode, RES_DIR, "dc"), priority = 1),
   tar_target(finefuelMC, getFFMC(dailyWx.res), priority = 1),
-  tar_target(ffmc.results, output_daily(finefuelMC, RES_DIR, "ffmc"), priority = 1)
+  tar_target(ffmc.results, output_daily(finefuelMC, RES_DIR, "ffmc"), priority = 1),
+  tar_target(duffMC, getDMC(dailyWx.res), priority = 1),
+  tar_target(ffmc.results, output_daily(duffMC, RES_DIR, "dmc"), priority = 1),
+  tar_target(dc.id, command = dplyr::select(droughtCode, c(id, dc, doy))),
+  tar_target(dmc.id, command = dplyr::select(dmc.results, c(id, dc, doy))),
+  tar_target(bui.input, commad = dplyr::left_join(dc.id, dmc.id, by = c("id", "doy")),
+  tar_target(buildUpIndex, getBUI(bui.input))
+  
 )
 
 
