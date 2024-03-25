@@ -68,8 +68,9 @@ list(tar_target(df.matchedTsd, matchTsd(processed_data), priority = 1),
   tar_target(ffmc.results, output_daily(duffMC, RES_DIR, "dmc"), priority = 1),
   tar_target(dc.id, command = dplyr::select(droughtCode, c(id, dc, doy))),
   tar_target(dmc.id, command = dplyr::select(dmc.results, c(id, dc, doy))),
-  tar_target(bui.input, commad = dplyr::left_join(dc.id, dmc.id, by = c("id", "doy")),
-  tar_target(buildUpIndex, getBUI(bui.input))
+  tar_target(bui.input, commad = dplyr::left_join(dc.id, dmc.id, by = c("id", "doy"))),
+  tar_target(buildUpIndex, getBUI(bui.input)),
+  tar_target(isi.input, command = dplyr::select(finefuelMC, c(id, ffmc, ws, doy)))
   
 )
 
