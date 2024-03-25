@@ -624,6 +624,50 @@ getISI <- function(res){
   return(isi_output)
 }
 
+getFWI <- function(res){
+  
+  # take dataframe and using cffdrs package computer DC.
+  # start day 120 with default dc_yda value of 15
+  # after that every day uses the previous days value
+  # for loop 
+  #if doy = 120, set first arg to 15. run loop through once
+  # if doy is anything other than 120, input output value 
+  # from last iteraction as dc_yda value in this one
+  
+  # loop through each row in each year
+  # get year 
+  jloop <- list()
+  iloop <- list()
+  id <- unique(res$id)
+  for(i in id){
+    
+    #subset results by year
+    res_id <- res[res$id == i,]
+    
+    #make sure its ordered by doy
+    res_id <- res_id[order(res_id$doy),]
+    
+    for(j in 1:nrow(res_id)){
+      
+      # get row
+      row <- res_id[j,]
+      
+      fwi <- fire_weather_index(row$bui, row$isi)
+      row <- mutate(row, fwi = fwi)
+      
+      
+      jloop[[j]] <- row
+      
+    }
+    output <- do.call(rbind, jloop)
+    
+    iloop[[i]] <- output
+    
+  }
+  fwi_output <- do.call(rbind, iloop)
+  return(fwi_output)
+}
+
 
 
 
