@@ -4,8 +4,13 @@
 #' 
 #' *****https://r-forge.r-project.org/projects/cffdrs/*****
 #' 
-#' I AM NOT THE AUTHOR OF THE FOLLOWING CODE.
+#' I AM NOT THE AUTHOR OF THE FOLLOWING CODE. And this code is COPIED VERBATIM FROM 
+#' ****https://github.com/cran/cffdrs/blob/master/R*****
 #' 
+#' CREDIT SHOULD BE ATTRIBUTED TO AUTHORS OF THIS PACKAGE.
+#' author information found here:
+#' ***https://github.com/cran/cffdrs/blob/master/DESCRIPTION***
+#'
 #' 
 #' Drought Code Calculator
 #'
@@ -300,3 +305,89 @@ buildup_index <- function(dmc, dc) {
   return(bui1)
 }
 
+
+
+#' Initial Spread Index Calculator
+#'
+#' @description Computes the Initial Spread Index From the FWI System. Equations
+#' are from Van Wagner (1985) as listed below, except for the modification for
+#' fbp taken from FCFDG (1992).
+#'
+#' Equations and FORTRAN program for the Canadian Forest Fire
+#' Weather Index System. 1985. Van Wagner, C.E.; Pickett, T.L.
+#' Canadian Forestry Service, Petawawa National Forestry
+#' Institute, Chalk River, Ontario. Forestry Technical Report 33.
+#' 18 p.
+#'
+#' Forestry Canada  Fire Danger Group (FCFDG) (1992). Development and
+#' Structure of the Canadian Forest Fire Behavior Prediction System."
+#' Technical Report ST-X-3, Forestry Canada, Ottawa, Ontario.
+#'
+#' @param ffmc Fine Fuel Moisture Code
+#' @param ws Wind Speed (km/h)
+#' @param fbpMod TRUE/FALSE if using the fbp modification at the extreme end
+#'
+#' @returns ISI - Intial Spread Index
+#'
+#' @noRd
+
+initial_spread_index <- function(
+    ffmc,
+    ws,
+    fbpMod = FALSE) {
+  # Eq. 10 - Moisture content
+  fm <- 147.27723 * (101 - ffmc) / (59.5 + ffmc)
+  # Eq. 24 - Wind Effect
+  # the ifelse, also takes care of the ISI modification for the fbp functions
+  # This modification is Equation 53a in FCFDG (1992)
+  fW <- ifelse(
+    ws >= 40 & fbpMod == TRUE,
+    12 * (1 - exp(-0.0818 * (ws - 28))),
+    exp(0.05039 * ws)
+  )
+  # Eq. 25 - Fine Fuel Moisture
+  fF <- 91.9 * exp(-0.1386 * fm) * (1 + (fm^5.31) / 49300000)
+  # Eq. 26 - Spread Index Equation
+  isi <- 0.208 * fW * fF
+  return(isi)
+}
+
+
+#' Fire Weather Index Calculation.
+#'
+#' @description All code is based on a C code library that was written by
+#' Canadian Forest Service Employees, which was originally based on the Fortran
+#' code listed in the reference below. All equations in this code refer to that
+#' document.
+#'
+#' Equations and FORTRAN program for the Canadian Forest Fire
+#' Weather Index System. 1985. Van Wagner, C.E.; Pickett, T.L.
+#' Canadian Forestry Service, Petawawa National Forestry
+#' Institute, Chalk River, Ontario. Forestry Technical Report 33.
+#' 18 p.
+#'
+#' Additional reference on FWI system
+#'
+#' Development and structure of the Canadian Forest Fire Weather
+#' Index System. 1987. Van Wagner, C.E. Canadian Forestry Service,
+#' Headquarters, Ottawa. Forestry Technical Report 35. 35 p.
+#'
+#'
+#' @param isi  Initial Spread Index
+#' @param bui Buildup Index
+#'
+#' @return A single fwi value
+#'
+#' @noRd
+
+fire_weather_index <- function(isi, bui) {
+  # Eqs. 28b, 28a, 29
+  bb <- ifelse(
+    bui > 80,
+    0.1 * isi * (1000 / (25 + 108.64 / exp(0.023 * bui))),
+    0.1 * isi * (0.626 * (bui^0.809) + 2)
+  )
+  # Eqs. 30b, 30a
+  fwi <- ifelse(bb <= 1, bb, exp(2.72 * ((0.434 * log(bb))^0.647)))
+  return(fwi)
+}
