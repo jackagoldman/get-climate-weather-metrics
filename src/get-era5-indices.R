@@ -447,7 +447,7 @@ getFFMC <- function(res){
       
       if(c("120") %in% row$doy){
         # if it is start of list, return fifteen
-        row <- mutate(row, ffmc_yda = c(15))
+        row <- mutate(row, ffmc_yda = c(80))
         ffmc <- fine_fuel_moisture_code(row$ffmc_yda, row$t, row$rh, row$ws, row$ppt)
         # change dc to dc_yda
         row <- mutate(row, ffmc_yda = ffmc)
@@ -472,6 +472,71 @@ getFFMC <- function(res){
   ffmc_output <- do.call(rbind, iloop)
   return(ffmc_output)
 }
+
+
+
+
+getDMC <- function(res){
+  
+  # take dataframe and using cffdrs package computer DC.
+  # start day 120 with default dc_yda value of 15
+  # after that every day uses the previous days value
+  # for loop 
+  #if doy = 120, set first arg to 15. run loop through once
+  # if doy is anything other than 120, input output value 
+  # from last iteraction as dc_yda value in this one
+  
+  # loop through each row in each year
+  # get year 
+  jloop <- list()
+  iloop <- list()
+  id <- unique(res$id)
+  for(i in id){
+    
+    #subset results by year
+    res_id <- res[res$id == i,]
+    
+    #make sure its ordered by doy
+    res_id <- res_id[order(res_id$doy),]
+    
+    for(j in 1:nrow(res_id)){
+      
+      # get row
+      row <- res_id[j,]
+      
+      if(c("120") %in% row$doy){
+        # if it is start of list, return fifteen
+        row <- mutate(row, dmc_yda = c(10))
+        dmc <- duff_moisture_code(row$dmc_yda, row$t, row$rh, row$ppt, row$lat, row$mon,
+                                   lat.adjust = TRUE)
+        row <- mutate(row, dmc_yda = dmc)
+        row <- rename(row, dmc = dmc_yda)
+        # ? maybe dettach row dataframe here?
+        # make dc_yda value
+        dmc_yda <- dmc
+      }else{
+        dmc <- duff_moisture_code(dmc_yda, row$t, row$rh, row$ws, row$ppt)
+        row <- mutate(row, dmc = dmc)
+        dmc_yda <- dmc
+      }
+      
+      jloop[[j]] <- row
+      
+    }
+    output <- do.call(rbind, jloop)
+    
+    iloop[[i]] <- output
+    
+  }
+  dmc_output <- do.call(rbind, iloop)
+  return(dmc_output)
+}
+
+
+
+
+
+
 
 
 #' Wrapper around daily weather function
