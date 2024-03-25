@@ -324,6 +324,9 @@ dailyWeather <- function(data, startDay, endDay){
       dplyr::mutate(lon = sf::st_coordinates(geometry)[,1],
                     lat = sf::st_coordinates(geometry)[,2]) |> st_drop_geometry()
     
+    # add 1 to month
+    mets <- mets |> mutate(mon = (mon + 1))
+    
     # input into empty list
     mylist[[i]] <- mets
     i + 1
